@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>员工信息管理系统</title>
+	<script src="vue.js"></script>
+	<script src="element.js"></script>
+	<link rel="stylesheet" href="element.css">
+	<script src="axios.js"></script>
+	<style>
+		*{
+			margin:0;
+			padding:0;
+		}
+	</style>
+</head>
+<body>
+	<div style="background-color:#7bb9fa;height:80px;padding-top: 30px;padding-left: 30px;">
+		<h2 style="font-family: '宋体'">员工信息管理系统</h2>
+	</div>
+	<div id="root">
+		<el-table :data="list" style="width:100%;">
+			<el-table-column prop="ID" label="ID"></el-table-column>
+			<el-table-column prop="name" label="name"></el-table-column>
+			<el-table-column prop="sex" label="sex">
+				<template slot-scope="scope">
+					<span v-if="Number(scope.row.sex)==1">男</span>
+					<span v-else>女</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop="birthday" label="birthday"></el-table-column>
+			<el-table-column prop="department" label="department"></el-table-column>
+			<el-table-column prop="status" label="status">
+				<template slot-scope="scope">
+					<el-tooltip :content="`在职时间：`+scope.row.joinDate" placement="top">
+						<el-tag type="success" v-if="Number(scope.row.sex)==1">在职</el-tag>
+					</el-tooltip>
+					<el-tooltip :content="`离职时间：`+scope.row.leaveDate" placement="top">
+						<el-tag type="danger" v-if="!Number(scope.row.sex)==1">离职</el-tag>
+					</el-tooltip>
+				</template>
+			</el-table-column>
+			<el-table-column prop="joinDate" label="joinDate"></el-table-column>
+			<el-table-column prop="salary" label="salary"></el-table-column>
+			<el-table-column prop="number" label="number"></el-table-column>
+			<el-table-column  label="edit">
+				<template slot-scope="scope">
+					<el-tooltip :content="`编辑数据`" placement="top">
+						<el-button type="primary" icon="el-icon-edit"  size="small"></el-button>
+					</el-tooltip>
+					<el-tooltip :content="`删除数据`" placement="top">
+						<el-button type="danger" icon="el-icon-delete" size="small"></el-button>
+					</el-tooltip>
+				</template>
+			</el-table-column>
+		</el-table>
+	</div>
+	<script>
+		var a = new Vue({
+			el:"#root",
+			data:{
+				list:[]
+			},
+			methods:{
+
+			},
+			mounted(){
+				axios.get("http://127.0.0.1:8080/getData").then((response)=>{
+
+					this.list=response.data;
+				})
+			}
+		})
+	</script>
+</body>
+</html>
