@@ -7,26 +7,26 @@
 <table>
     <thead>
         <tr>
-            <th>页面名称</th>
+            <th>名称</th>
             <th>类型</th>
             <th>说明</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>登录</td>
-            <td>username,password</td>
-            <td>输入正确的账户和密码进行<登录></td>
-        </tr>
-         <tr>
-            <td>注册</td>
+            <td>添加员工</td>
             <td>username,password...</td>
             <td>输入信息,<注册>账户</td>
         </tr>
+         <tr>
+            <td>管理员工</td>
+            <td>username,password...</td>
+            <td>查看信息,<编辑>账户</td>
+        </tr>
         <tr>
-            <td>管理页面</td>
-            <td>view,click</td>
-            <td>查看信息,<编辑>信息,<删除>信息</td>
+            <td>删除员工</td>
+            <td>delete,click</td>
+            <td><删除>员工数据</td>
         </tr>
     </tbody>
 </table>
