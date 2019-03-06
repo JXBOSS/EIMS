@@ -1,7 +1,9 @@
-# EIMS
 #Vue+ElementUI数据库管理系统
+
 ####使用Vue和Element对mysql数据库进行创作和管理操作
-###页面地址：[jiaxiong.xyz](#jiaxiong.xyz)
+
+###页面地址：[jiaxiong.xyz](http://jiaxiong.xyz)
+
 <table>
     <thead>
         <tr>
@@ -18,7 +20,7 @@
         </tr>
          <tr>
             <th>注册</th>
-            <th>username，password，。。。</th>
+            <th>username，password...</th>
             <th>注册账户</th>
         </tr>
         <tr>
