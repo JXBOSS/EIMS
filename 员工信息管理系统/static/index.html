@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>员工信息管理系统</title>
+	<script src="vue.js"></script>
+	<script src="element.js"></script>
+	<link rel="stylesheet" href="element.css">
+	<script src="axios.js"></script>
+	<style>
+		*{
+			margin:0;
+			padding:0;
+		}
+		.el-input__inner{
+			height:30px;
+			line-height:30px;
+		}
+		.el-form-item{
+			margin-bottom: 6px;
+		}
+		.el-dialog__body{
+			padding:6px 30px 20px 16px;
+		}
+	</style>
+</head>
+<body>
+	<div style="background-color:#7bb9fa;height:80px;padding-top: 30px;padding-left: 30px;">
+		<h2 style="font-family: '宋体'">员工信息管理系统</h2>
+	</div>
+	<div id="root">
+		<el-button type="primary" icon="el-icon-plus" style="margin:14px;width:140px;" @click="dialogadd = true">添加新员工</el-button>
+		<el-table :data="list" style="width:100%;">
+			<el-table-column prop="ID" label="ID"></el-table-column>
+			<el-table-column prop="name" label="name"></el-table-column>
+			<el-table-column prop="sex" label="sex">
+				<template slot-scope="scope">
+					<span v-if="Number(scope.row.sex)==1">男</span>
+					<span v-else>女</span>
+				</template>
+			</el-table-column>
+			<el-table-column prop="birthday" label="birthday"></el-table-column>
+			<el-table-column prop="department" label="department"></el-table-column>
+			<el-table-column prop="status" label="status">
+				<template slot-scope="scope">
+					<el-tooltip :content="`在职时间：`+scope.row.joinDate" placement="top">
+						<el-tag type="success" v-if="Number(scope.row.sex)==1">在职</el-tag>
+					</el-tooltip>
+					<el-tooltip :content="`离职时间：`+scope.row.leaveDate" placement="top">
+						<el-tag type="danger" v-if="!Number(scope.row.sex)==1">离职</el-tag>
+					</el-tooltip>
+				</template>
+			</el-table-column>
+			<el-table-column prop="joinDate" label="joinDate"></el-table-column>
+			<el-table-column prop="salary" label="salary"></el-table-column>
+			<el-table-column prop="number" label="number"></el-table-column>
+			<el-table-column  label="edit">
+				<template slot-scope="scope">
+					<el-tooltip :content="`编辑数据`" placement="top">
+						<el-button type="primary" icon="el-icon-edit"  size="small"></el-button>
+					</el-tooltip>
+					<el-tooltip :content="`删除数据`" placement="top">
+						<el-button type="danger" icon="el-icon-delete" size="small"></el-button>
+					</el-tooltip>
+				</template>
+			</el-table-column>
+		</el-table>
+
+		<el-dialog title="添加新员工" :visible="dialogadd" width="36%" :before-close="handleClose">
+			<el-form :model="form">
+				<el-form-item  label="IDCard" :label-width="formLabelWidth">
+					<el-input v-model="form.IDCard"></el-input>
+				</el-form-item>
+				<el-form-item label="name" :label-width="formLabelWidth">
+					<el-input v-model="form.name"></el-input>
+				</el-form-item>
+				<el-form-item label="sex" :label-width="formLabelWidth">
+					<el-input v-model="form.sex"></el-input>
+				</el-form-item>
+				<el-form-item label="number" :label-width="formLabelWidth">
+					<el-input v-model="form.number"></el-input>
+				</el-form-item>
+				<el-form-item label="birthday" :label-width="formLabelWidth">
+					<el-input v-model="form.birthday"></el-input>
+				</el-form-item>
+				<el-form-item label="department" :label-width="formLabelWidth">
+					<el-input v-model="form.department"></el-input>
+				</el-form-item>
+				<el-form-item label="joinDate" :label-width="formLabelWidth">
+					<el-input v-model="form.joinDate"></el-input>
+				</el-form-item>
+				<el-form-item label="leaveDate" :label-width="formLabelWidth">
+					<el-input v-model="form.leaveDate"></el-input>
+				</el-form-item>
+				<el-form-item label="salary" :label-width="formLabelWidth">
+					<el-input v-model="form.salary"></el-input>
+				</el-form-item>
+				<el-form-item label="status" :label-width="formLabelWidth">
+					<el-input v-model="form.status"></el-input>
+				</el-form-item>
+				<el-form-item style="margin-left:30%">
+					<el-button type="primary" @click="addData">确定</el-button>
+					<el-button type="danger" @click="dialogadd = false">取消</el-button>
+				</el-form-item>
+			</el-form>
+		</el-dialog>
+		<el-dialog ></el-dialog>
+	</div>
+	<script>
+		var root = new Vue({
+			el:"#root",
+			data:{
+				list:[],
+				dialogadd:false,
+				dialogdel:false,
+				formLabelWidth:'120px',
+				form:{}
+			},
+			methods:{
+				addData(){
+					this.dialogadd=false
+				},
+				handleClose(done){
+					this.dialogadd=false
+					done();
+				}
+			},
+			mounted(){
+				axios.get("http://127.0.0.1:8080/getData").then((response)=>{
+
+					this.list=response.data;
+				})
+			}
+		})
+	</script>
+</body>
+</html>
