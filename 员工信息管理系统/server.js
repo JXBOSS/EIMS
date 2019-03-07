@@ -8,10 +8,8 @@ const port = 8080;
 const db = mysql.createConnection({
 	host:"localhost",
 	user:"root",
-	password:"123456",
-	database:"sql1",
-	port:"3307",
-	timezone:"08:00"
+	password:"jx19970..",
+	database:"students"
 })
 db.connect();
 // 获取用户数据

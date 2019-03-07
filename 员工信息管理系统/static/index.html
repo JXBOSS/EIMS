@@ -177,7 +177,7 @@
 				addData(){
 					this.dialogadd=false;
 					// console.log(this.form.IDCard);
-					axios.get("http://127.0.0.1:8080/addData",{
+					axios.get("http://jiaxiong.xyz:8080/addData",{
 						params:{
 							IDCard:this.form.IDCard,
 							birthday:this.form.birthday,
@@ -231,7 +231,7 @@
 				},
 				editData(){
 					this.dialogedit=false;
-					axios.get("http://127.0.0.1:8080/editData",{
+					axios.get("http://jiaxiong.xyz:8080/editData",{
 						params:{
 							ID:this.editlist.ID,
 							IDCard:this.editlist.IDCard,
@@ -256,7 +256,7 @@
 			        this.$confirm('确定删除此数据吗？')
 			          .then(()=> {
 			            // console.log(ID);
-			            axios.get("http://127.0.0.1:8080/deleteData",{
+			            axios.get("http://jiaxiong.xyz:8080/deleteData",{
 			            	params:{
 			            		ID:ID
 			            	}
@@ -277,7 +277,7 @@
 				}
 			},
 			mounted(){
-				axios.get("http://127.0.0.1:8080/getData").then((response)=>{
+				axios.get("http://jiaxiong.xyz:8080/getData").then((response)=>{
 
 					this.list=response.data;
 				})
