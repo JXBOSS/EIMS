@@ -22,6 +22,9 @@
 		.el-dialog__body{
 			padding:6px 30px 20px 16px;
 		}
+		/*.el-dialog{
+			margin-top:5vh!important;
+		}*/
 	</style>
 </head>
 <body>
@@ -44,10 +47,10 @@
 			<el-table-column prop="status" label="status">
 				<template slot-scope="scope">
 					<el-tooltip :content="`在职时间：`+scope.row.joinDate" placement="top">
-						<el-tag type="success" v-if="Number(scope.row.sex)==1">在职</el-tag>
+						<el-tag type="success" v-if="Number(scope.row.status)==1">在职</el-tag>
 					</el-tooltip>
 					<el-tooltip :content="`离职时间：`+scope.row.leaveDate" placement="top">
-						<el-tag type="danger" v-if="!Number(scope.row.sex)==1">离职</el-tag>
+						<el-tag type="danger" v-if="Number(scope.row.status)==0">离职</el-tag>
 					</el-tooltip>
 				</template>
 			</el-table-column>
@@ -57,16 +60,16 @@
 			<el-table-column  label="edit">
 				<template slot-scope="scope">
 					<el-tooltip :content="`编辑数据`" placement="top">
-						<el-button type="primary" icon="el-icon-edit"  size="small"></el-button>
+						<el-button type="primary" icon="el-icon-edit"  size="small" @click="edit(scope.$index,scope.row.ID)"></el-button>
 					</el-tooltip>
 					<el-tooltip :content="`删除数据`" placement="top">
-						<el-button type="danger" icon="el-icon-delete" size="small"></el-button>
+						<el-button type="danger" icon="el-icon-delete" size="small" @click="deleteData(scope.row.ID)"></el-button>
 					</el-tooltip>
 				</template>
 			</el-table-column>
 		</el-table>
 
-		<el-dialog title="添加新员工" :visible="dialogadd" width="36%" :before-close="handleClose">
+		<el-dialog title="添加新员工" :visible="dialogadd" width="36%" :before-close="handleClose" >
 			<el-form :model="form">
 				<el-form-item  label="IDCard" :label-width="formLabelWidth">
 					<el-input v-model="form.IDCard"></el-input>
@@ -75,28 +78,30 @@
 					<el-input v-model="form.name"></el-input>
 				</el-form-item>
 				<el-form-item label="sex" :label-width="formLabelWidth">
-					<el-input v-model="form.sex"></el-input>
+					<el-radio v-model="form.sex" label="1">男</el-radio>
+					<el-radio v-model="form.sex" label="0">女</el-radio>
 				</el-form-item>
 				<el-form-item label="number" :label-width="formLabelWidth">
 					<el-input v-model="form.number"></el-input>
 				</el-form-item>
 				<el-form-item label="birthday" :label-width="formLabelWidth">
-					<el-input v-model="form.birthday"></el-input>
+					<el-date-picker type="date" v-model="form.birthday" value-format="yyyy-MM-dd"></el-date-picker>
 				</el-form-item>
 				<el-form-item label="department" :label-width="formLabelWidth">
 					<el-input v-model="form.department"></el-input>
 				</el-form-item>
 				<el-form-item label="joinDate" :label-width="formLabelWidth">
-					<el-input v-model="form.joinDate"></el-input>
+					<el-date-picker type="date" v-model="form.joinDate" value-format="yyyy-MM-dd"></el-date-picker>
 				</el-form-item>
 				<el-form-item label="leaveDate" :label-width="formLabelWidth">
-					<el-input v-model="form.leaveDate"></el-input>
+					<el-date-picker type="date" v-model="form.leaveDate" value-format="yyyy-MM-dd"></el-date-picker type="date">
 				</el-form-item>
 				<el-form-item label="salary" :label-width="formLabelWidth">
 					<el-input v-model="form.salary"></el-input>
 				</el-form-item>
 				<el-form-item label="status" :label-width="formLabelWidth">
-					<el-input v-model="form.status"></el-input>
+					<el-radio v-model="form.status" label="1">在职</el-radio>
+					<el-radio v-model="form.status" label="2">离职</el-radio>
 				</el-form-item>
 				<el-form-item style="margin-left:30%">
 					<el-button type="primary" @click="addData">确定</el-button>
@@ -104,7 +109,47 @@
 				</el-form-item>
 			</el-form>
 		</el-dialog>
-		<el-dialog ></el-dialog>
+
+		<el-dialog title="编辑员工" :visible="dialogedit" width="36%" :before-close="handleClose" >
+			<el-form :model="editlist">
+				<el-form-item  label="IDCard" :label-width="formLabelWidth">
+					<el-input v-model="editlist.IDCard"></el-input>
+				</el-form-item>
+				<el-form-item label="name" :label-width="formLabelWidth">
+					<el-input v-model="editlist.name"></el-input>
+				</el-form-item>
+				<el-form-item label="sex" :label-width="formLabelWidth">
+					<el-radio v-model="editlist.sex" label="1">男</el-radio>
+					<el-radio v-model="editlist.sex" :label="0">女</el-radio>
+				</el-form-item>
+				<el-form-item label="number" :label-width="formLabelWidth">
+					<el-input v-model="editlist.number"></el-input>
+				</el-form-item>
+				<el-form-item label="birthday" :label-width="formLabelWidth">
+					<el-date-picker type="date" v-model="editlist.birthday" value-format="yyyy-MM-dd"></el-date-picker type="date">
+				</el-form-item>
+				<el-form-item label="department" :label-width="formLabelWidth">
+					<el-input v-model="editlist.department"></el-input>
+				</el-form-item>
+				<el-form-item label="joinDate" :label-width="formLabelWidth">
+					<el-date-picker type="date" v-model="editlist.joinDate" value-format="yyyy-MM-dd"></el-date-picker>
+				</el-form-item>
+				<el-form-item label="leaveDate" :label-width="formLabelWidth">
+					<el-date-picker type="date" v-model="editlist.leaveDate" value-format="yyyy-MM-dd"></el-date-picker type="date">
+				</el-form-item>
+				<el-form-item label="salary" :label-width="formLabelWidth">
+					<el-input v-model="editlist.salary"></el-input>
+				</el-form-item>
+				<el-form-item label="status" :label-width="formLabelWidth">
+					<el-radio v-model="editlist.status" label="1">在职</el-radio>
+					<el-radio v-model="editlist.status" label="0">离职</el-radio>
+				</el-form-item>
+				<el-form-item style="margin-left:30%">
+					<el-button type="primary" @click="editData">确定</el-button>
+					<el-button type="danger" @click="dialogedit = false">取消</el-button>
+				</el-form-item>
+			</el-form>
+		</el-dialog>
 	</div>
 	<script>
 		var root = new Vue({
@@ -112,16 +157,122 @@
 			data:{
 				list:[],
 				dialogadd:false,
-				dialogdel:false,
+				dialogedit:false,
 				formLabelWidth:'120px',
-				form:{}
+				form:{},
+				editlist:{
+					IDCard:"",
+					birthday:"",
+					department:"",
+					joinDate:"",
+					leaveDate:"",
+					name:"",
+					number:"",
+					salary:"",
+					sex:"",
+					status:""
+				}
 			},
 			methods:{
 				addData(){
-					this.dialogadd=false
+					this.dialogadd=false;
+					// console.log(this.form.IDCard);
+					axios.get("http://127.0.0.1:8080/addData",{
+						params:{
+							IDCard:this.form.IDCard,
+							birthday:this.form.birthday,
+							department:this.form.department,
+							joinDate:this.form.joinDate,
+							leaveDate:this.form.leaveDate,
+							name:this.form.name,
+							number:this.form.number,
+							salary:this.form.salary,
+							sex:this.form.sex,
+							status:this.form.status
+						}
+					}).then((response)=>{
+						if(response.data == "success"){
+							alert("添加成功");
+							location.href="index.html";
+						}
+					})
+				},
+				edit(index,ID){
+			        this.$confirm('确定编辑此数据吗？')
+			          .then(()=> {
+			            this.dialogedit=true;
+			            this.editlist.ID = ID;
+			            this.editlist.IDCard = this.list[index].IDCard;
+						this.editlist.birthday = this.list[index].birthday;
+						this.editlist.department = this.list[index].department;
+						this.editlist.joinDate = this.list[index].joinDate;
+						this.editlist.leaveDate = this.list[index].leaveDate;
+						this.editlist.name = this.list[index].name;
+						this.editlist.number = this.list[index].number;
+						this.editlist.salary = this.list[index].salary;
+						// this.editlist.sex = this.list[index].sex;
+					if(this.list[index].sex == 1){
+						this.editlist.sex ="1"
+					}else if(this.list[index].sex == 0){
+						this.editlist.sex =0
+					}
+						// this.editlist.status = this.list[index].status;
+					if(this.list[index].status==1){
+						// console.log(this.list[index].status);
+						this.editlist.status="1";
+					}else if(this.list[index].status==0){
+						// console.log(this.list[index].status);
+						this.editlist.status="0";
+					}
+			          })
+			          .catch(()=> {
+			          	this.dialogedit=false;
+			          });
+				},
+				editData(){
+					this.dialogedit=false;
+					axios.get("http://127.0.0.1:8080/editData",{
+						params:{
+							ID:this.editlist.ID,
+							IDCard:this.editlist.IDCard,
+							birthday:this.editlist.birthday,
+							department:this.editlist.department,
+							joinDate:this.editlist.joinDate,
+							leaveDate:this.editlist.leaveDate,
+							name:this.editlist.name,
+							number:this.editlist.number,
+							salary:this.editlist.salary,
+							sex:this.editlist.sex,
+							status:this.editlist.status
+						}
+					}).then((response)=>{
+						if(response.data == "success"){
+							alert("编辑成功");
+							location.href="index.html";
+						}
+					})
+				},
+				deleteData(ID){
+			        this.$confirm('确定删除此数据吗？')
+			          .then(()=> {
+			            // console.log(ID);
+			            axios.get("http://127.0.0.1:8080/deleteData",{
+			            	params:{
+			            		ID:ID
+			            	}
+			            }).then((response)=>{
+			            	if(response.data == "success"){
+			            		alert("删除成功");
+			            		location.href="index.html"
+			            	}
+			            })
+			          })
+			          .catch(()=> {});
+				     
 				},
 				handleClose(done){
-					this.dialogadd=false
+					this.dialogadd=false;
+					this.dialogedit=false;
 					done();
 				}
 			},
